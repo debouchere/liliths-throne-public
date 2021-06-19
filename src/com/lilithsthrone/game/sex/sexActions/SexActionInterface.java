@@ -38,7 +38,6 @@ import com.lilithsthrone.game.sex.SexPace;
 import com.lilithsthrone.game.sex.SexParticipantType;
 import com.lilithsthrone.game.sex.SexType;
 import com.lilithsthrone.game.sex.positions.slots.SexSlotGeneric;
-import com.lilithsthrone.game.sex.sexActions.baseActionsMisc.GenericActions;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Util;
 import com.lilithsthrone.utils.colours.Colour;
@@ -467,7 +466,9 @@ public interface SexActionInterface {
 	
 	public default boolean isBasicCoreRequirementsMet() {
 		if(this.isSadisticAction()
-				&& (!Main.getProperties().hasValue(PropertyValue.sadisticSexContent) || !Main.sex.isSadisticActionsAllowed())) {
+				&& (!Main.getProperties().hasValue(PropertyValue.sadisticSexContent)
+						|| !Main.sex.isSadisticActionsAllowed()
+						|| !Main.sex.getCharacterPerformingAction().hasFetish(Fetish.FETISH_SADIST))) {
 			return false;
 		}
 		
@@ -1212,7 +1213,7 @@ public interface SexActionInterface {
 				}
 				@Override
 				public boolean isSexPositioningHighlight() {
-					return !SexActionInterface.this.isPositionSwap() && (SexActionInterface.this.getActionType()==SexActionType.POSITIONING || SexActionInterface.this.equals(GenericActions.PLAYER_STOP_SEX));
+					return !SexActionInterface.this.isPositionSwap() && (SexActionInterface.this.getActionType()==SexActionType.POSITIONING || (SexActionInterface.this.getActionType()==SexActionType.SPECIAL && SexActionInterface.this.endsSex()));
 				}
 				@Override
 				public Colour getHighlightColour() {
@@ -1372,7 +1373,7 @@ public interface SexActionInterface {
 				}
 				@Override
 				public boolean isSexPositioningHighlight() {
-					return !SexActionInterface.this.isPositionSwap() && (getActionType()==SexActionType.POSITIONING || SexActionInterface.this.equals(GenericActions.PLAYER_STOP_SEX));
+					return !SexActionInterface.this.isPositionSwap() && (getActionType()==SexActionType.POSITIONING || (SexActionInterface.this.getActionType()==SexActionType.SPECIAL && SexActionInterface.this.endsSex()));
 				}
 				@Override
 				public SexPace getSexPace() {
@@ -1493,7 +1494,7 @@ public interface SexActionInterface {
 			}
 			@Override
 			public boolean isSexPositioningHighlight() {
-				return !SexActionInterface.this.isPositionSwap() && (getActionType()==SexActionType.POSITIONING || SexActionInterface.this.equals(GenericActions.PLAYER_STOP_SEX));
+				return !SexActionInterface.this.isPositionSwap() && (getActionType()==SexActionType.POSITIONING || (SexActionInterface.this.getActionType()==SexActionType.SPECIAL && SexActionInterface.this.endsSex()));
 			}
 			@Override
 			public SexPace getSexPace() {
